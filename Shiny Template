@@ -1,0 +1,39 @@
+library(shiny)
+
+#fluidpage-------------
+ui <- fluidPage("My first webpage!",
+#anything on fluidPage will end up on the app
+
+#input arguments-----------
+  #slider function------------
+    sliderInput(inputId = "num",
+    label="Choose a number",
+    value=25,min=1,max=100
+    ),
+  #shiny has a lot of input functions
+
+#output functions------------
+mainPanel(
+plotOutput(outputId="hist")
+)
+)
+
+#server---------
+#assemble inputs into outputs
+#1. must save your output object with $
+#2. built output with render()
+#3. Access input values with $ (changes with user)
+#if you follow the rules, Shiny will take care of reactivity
+server <- function(input, output) #listlike arguments 
+  {
+
+  output$hist<-renderPlot({
+    #title<-"Your values"
+    hist(rnorm(input$num))
+    })   
+  }
+
+shinyApp(ui = ui, server = server)
+#save stuff as app.R always!
+#use Shinyapps.io as a server to share/deploy
+  #have to make an account and download a package from Github 

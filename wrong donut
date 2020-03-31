@@ -1,0 +1,36 @@
+source("modelR.R") 
+#source ("app.R")
+
+#installing libraries-------
+library(dplyr)
+library(ggplot2)
+library(ggiraph)
+library(ggplot2)
+library(scales)
+
+donut_data <- data.frame(type = c("Unfilled", "Filled"), value = c(100,200)) %>%
+  mutate(
+    percentage = (value / sum(value)),
+  ) %>%
+  mutate(percentage_label = paste0(round(100 * percentage, 1), "%"))
+
+donut_plot <- ggplot(donut_data, aes(y = value, fill = type)) +
+  geom_bar_interactive(
+    aes(x = 1),
+    width = 0.1,
+    stat = "identity",
+    show.legend = FALSE
+  ) +
+  annotate(
+    geom = "text",
+    x = 0,
+    y = 0,
+    label = donut_data[["percentage_label"]][donut_data[["type"]] == "Filled"],
+    size = 20,
+    color = "black"
+  ) +
+  scale_fill_manual(values = c(Unfilled = "white", Filled = "dark green")) +
+  coord_polar(theta = "y") +
+  theme_void()
+
+ggiraph(ggobj = donut_plot)
